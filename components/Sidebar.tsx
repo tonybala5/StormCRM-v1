@@ -34,6 +34,7 @@ const MENU_ITEMS = [
   { id: 11, label: 'Storm AI', icon: Bot },
   { id: 8, label: 'Mensagens', icon: MessageSquare },
   { id: 9, label: 'Notificações', icon: Bell },
+  { id: 12, label: 'Assinatura', icon: Gift },
   { id: 10, label: 'Configurações', icon: Settings },
 ];
 

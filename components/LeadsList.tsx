@@ -30,6 +30,7 @@ const LeadsList: React.FC<LeadsListProps> = ({ leads, onUpdate }) => {
   // Form States
   const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [conversionValue, setConversionValue] = useState<number>(35);
   
   const [formData, setFormData] = useState<Partial<Lead>>({
     nome: '',
@@ -110,6 +111,7 @@ const LeadsList: React.FC<LeadsListProps> = ({ leads, onUpdate }) => {
 
   const openConvertModal = (lead: Lead) => {
     setSelectedLead(lead);
+    setConversionValue(35); // Default value
     setConvertModalOpen(true);
   };
 
@@ -123,7 +125,7 @@ const LeadsList: React.FC<LeadsListProps> = ({ leads, onUpdate }) => {
       telefone: selectedLead.telefone,
       status: 'Ativo',
       origem: selectedLead.origem,
-      valorMensal: 35, // Default
+      valorMensal: conversionValue,
       dataInicio: new Date().toISOString(),
       proximoVencimento: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // +30 days
       historicoPagamentos: [],
@@ -416,9 +418,20 @@ const LeadsList: React.FC<LeadsListProps> = ({ leads, onUpdate }) => {
              <CheckCircle2 className="w-8 h-8 text-storm-green" />
            </div>
            <h3 className="text-xl font-bold text-text-primary mb-2">Confirmar Conversão?</h3>
-           <p className="text-text-secondary mb-6">
+           <p className="text-text-secondary mb-4">
              O lead <strong>{selectedLead?.nome}</strong> será movido para a lista de Clientes Ativos e o teste será marcado como "Convertido".
            </p>
+           
+           <div className="bg-bg-tertiary p-4 rounded-lg border border-border mb-6 text-left">
+              <label className="block text-xs font-medium text-text-secondary mb-1">Valor da Mensalidade (R$)</label>
+              <input 
+                type="number" 
+                value={conversionValue}
+                onChange={(e) => setConversionValue(Number(e.target.value))}
+                className="w-full bg-bg-secondary border border-border rounded-lg p-2 text-text-primary focus:ring-2 focus:ring-storm-green outline-none"
+              />
+           </div>
+
            <div className="flex justify-center gap-3">
              <button 
                onClick={() => setConvertModalOpen(false)}

@@ -17,6 +17,7 @@ import AdminPanel from './components/AdminPanel';
 import CommandPalette from './components/CommandPalette';
 import ShortcutsModal from './components/ShortcutsModal';
 import Onboarding from './components/Onboarding';
+import Subscription from './components/Subscription';
 import { storageService } from './services/storage';
 import { authService } from './services/auth';
 import { isFirebaseConfigured } from './services/firebase';
@@ -238,22 +239,26 @@ function AppContent() {
   if (isTrialExpired) {
       return (
           <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center p-4">
-              <div className="max-w-4xl w-full bg-bg-secondary border border-border rounded-2xl shadow-2xl overflow-hidden text-center p-8">
-                  <div className="w-20 h-20 bg-storm-red/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Clock className="w-10 h-10 text-storm-red" />
-                  </div>
-                  <h1 className="text-3xl font-bold text-text-primary mb-2">Seu período de teste terminou</h1>
-                  <p className="text-text-secondary mb-8 max-w-lg mx-auto">
-                      Mas não se preocupe, seus dados estão seguros! Para continuar acessando o Storm CRM e gerenciando seus clientes, escolha um plano abaixo.
-                  </p>
-                  
-                  <div className="h-[600px] overflow-y-auto border border-border rounded-xl">
-                      <Plans onPlanSelected={handlePlanUpdate} />
+              <div className="max-w-4xl w-full bg-bg-secondary border border-border rounded-2xl shadow-2xl overflow-hidden">
+                  <div className="p-8 text-center border-b border-border">
+                      <div className="w-20 h-20 bg-storm-red/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <Clock className="w-10 h-10 text-storm-red" />
+                      </div>
+                      <h1 className="text-3xl font-bold text-text-primary mb-2">Seu período de teste terminou</h1>
+                      <p className="text-text-secondary max-w-lg mx-auto">
+                          Seu acesso foi bloqueado. Para continuar gerenciando seus leads e clientes, atualize para o Plano Pro.
+                      </p>
                   </div>
                   
-                  <button onClick={handleLogout} className="mt-6 text-sm text-text-secondary hover:text-text-primary underline">
-                      Sair da conta
-                  </button>
+                  <div className="max-h-[70vh] overflow-y-auto">
+                      <Subscription />
+                  </div>
+                  
+                  <div className="p-4 bg-bg-tertiary text-center border-t border-border">
+                    <button onClick={handleLogout} className="text-sm text-text-secondary hover:text-text-primary underline">
+                        Sair da conta
+                    </button>
+                  </div>
               </div>
           </div>
       );
@@ -275,7 +280,7 @@ function AppContent() {
             case 8: return <MessageTemplates />;
             case 9: return <Notifications clientes={clientes} leads={leads} tasks={tasks} />;
             case 10: return <Settings />;
-            case 12: return <Plans onPlanSelected={loadData} />;
+            case 12: return <Subscription />;
             default: return <div className="p-8 text-center text-text-secondary">Módulo em desenvolvimento</div>;
           }
         })()}

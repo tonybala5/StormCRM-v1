@@ -3,43 +3,41 @@ import { ProjectPhase, PhaseStatus, UserQuestion, Plan } from './types';
 export const PLANS: Plan[] = [
   {
     id: "starter",
-    nome: "Starter",
-    precoMensal: 29.90,
-    precoAnual: 299.00,
+    nome: "Free (Teste)",
+    precoMensal: 0,
+    precoAnual: 0,
     limites: {
-      clientes: 50,
-      leads: 100,
-      templates: 20,
-      stormAI: 10
+      clientes: 5,
+      leads: 30,
+      templates: 5,
+      stormAI: 3
     },
     recursos: [
-      "Dashboard completo",
-      "Gestão de clientes",
-      "Leads em teste",
-      "Templates de mensagens",
-      "Suporte por email"
+      "15 dias de teste grátis",
+      "Limite de 30 leads (testes)",
+      "Gestão básica de clientes",
+      "Prova social estratégica"
     ],
     popular: false,
-    cor: "#8b5cf6"
+    cor: "#94a3b8"
   },
   {
     id: "professional",
-    nome: "Professional",
-    precoMensal: 59.90,
-    precoAnual: 599.00,
+    nome: "Pro",
+    precoMensal: 49.90,
+    precoAnual: 499.00,
     limites: {
-      clientes: 200,
-      leads: 500,
-      templates: 50,
+      clientes: -1,
+      leads: -1,
+      templates: -1,
       stormAI: 100
     },
     recursos: [
-      "Tudo do Starter +",
+      "Tudo Ilimitado",
       "Storm AI (100 consultas)",
       "Métricas avançadas",
       "Investimento em Ads",
-      "Relatórios PDF",
-      "Suporte prioritário"
+      "Suporte via WhatsApp"
     ],
     popular: true,
     cor: "#10b981"

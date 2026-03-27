@@ -104,7 +104,7 @@ export const authService = {
       userProfile = profile as UserProfile;
     } else {
       const trialEnds = new Date();
-      trialEnds.setDate(trialEnds.getDate() + 7);
+      trialEnds.setDate(trialEnds.getDate() + 15);
       
       userProfile = {
         id: supabaseUser.id,
@@ -139,7 +139,7 @@ export const authService = {
       userProfile = docSnap.data() as UserProfile;
     } else {
       const trialEnds = new Date();
-      trialEnds.setDate(trialEnds.getDate() + 7);
+      trialEnds.setDate(trialEnds.getDate() + 15);
       
       userProfile = {
         id: firebaseUser.uid,
@@ -184,7 +184,7 @@ export const authService = {
         if (authData.user) {
           const isSuperAdminRegistering = ADMIN_EMAILS.includes(data.email || '');
           const trialEnds = new Date();
-          trialEnds.setDate(trialEnds.getDate() + 7);
+          trialEnds.setDate(trialEnds.getDate() + 15);
 
           const planId: PlanId = isSuperAdminRegistering ? 'enterprise' : 'starter';
           const status = isSuperAdminRegistering ? 'active' : 'trial';
@@ -222,7 +222,7 @@ export const authService = {
 
       const isSuperAdminRegistering = ADMIN_EMAILS.includes(data.email || '');
       const trialEnds = new Date();
-      trialEnds.setDate(trialEnds.getDate() + 7);
+      trialEnds.setDate(trialEnds.getDate() + 15);
 
       const planId: PlanId = isSuperAdminRegistering ? 'enterprise' : 'starter';
       const status = isSuperAdminRegistering ? 'active' : 'trial';

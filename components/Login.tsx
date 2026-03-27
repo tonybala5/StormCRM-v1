@@ -33,6 +33,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   // Welcome Modal
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   // Forgot Password Modal
   const [showForgotModal, setShowForgotModal] = useState(false);
@@ -89,6 +90,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       addToast('Dados de Admin preenchidos', 'info');
   };
 
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -99,6 +105,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       // --- LOGIN LOGIC ---
       if (!email || !password) {
         setError('Preencha todos os campos');
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        setError('Formato de email inválido');
         return;
       }
 
@@ -116,7 +127,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               } else if (result.require2FA) {
                 setStep('2fa');
               } else {
-                onLogin();
+                // Check trial expiration
+                if (authService.isTrialExpired()) {
+                  setShowUpgradeModal(true);
+                } else {
+                  onLogin();
+                }
               }
           } catch (e) {
               setError('Erro de conexão.');
@@ -137,6 +153,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       // --- REGISTER LOGIC ---
       if (!regData.name || !regData.email || !regData.password || !regData.businessName) {
           setError('Todos os campos marcados com * são obrigatórios.');
+          return;
+      }
+      if (!validateEmail(regData.email)) {
+          setError('Formato de email inválido.');
           return;
       }
       if (regData.password !== regData.confirmPassword) {
@@ -187,6 +207,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       e.preventDefault();
       if (!forgotEmail) {
           addToast('Digite seu email.', 'error');
+          return;
+      }
+      if (!validateEmail(forgotEmail)) {
+          addToast('Formato de email inválido.', 'error');
           return;
       }
       const res = await authService.resetPassword(forgotEmail);
@@ -341,7 +365,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div className="text-center pt-4 border-t border-border">
                 <p className="text-sm text-text-secondary">Ainda não tem conta?</p>
                 <button type="button" onClick={() => { setMode('register'); setError(''); }} className="text-storm-cyan font-bold hover:underline mt-1">
-                    Criar Conta - 7 Dias Grátis
+                    Criar Conta - 15 Dias Grátis
                 </button>
             </div>
           </form>
@@ -454,12 +478,70 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
              <div className="w-16 h-16 mx-auto bg-storm-green/20 rounded-full flex items-center justify-center text-2xl mb-4">🎉</div>
              <h3 className="text-xl font-bold text-text-primary mb-2">Conta criada com sucesso!</h3>
              <p className="text-text-secondary mb-6">
-                 Seu teste grátis de <strong>7 dias</strong> começou agora.<br/>
+                 Seu teste grátis de <strong>15 dias</strong> começou agora.<br/>
                  Aproveite todos os recursos ilimitados durante este período.
              </p>
              <button onClick={closeWelcome} className="w-full bg-storm-purple text-white py-3 rounded-lg font-bold hover:bg-storm-purple/90">
                  Começar a Usar
              </button>
+          </div>
+      </Modal>
+
+      {/* Upgrade/Payment Modal */}
+      <Modal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} title="Assinatura Expirada">
+          <div className="text-center p-2">
+             <div className="w-16 h-16 mx-auto bg-storm-red/10 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="w-8 h-8 text-storm-red" />
+             </div>
+             <h3 className="text-xl font-bold text-text-primary mb-2">Seu período de teste acabou!</h3>
+             <p className="text-text-secondary mb-6">
+                Para continuar utilizando o Storm CRM e gerenciar seus clientes, atualize para o <strong>Plano Pro</strong>.
+             </p>
+             
+             <div className="bg-bg-tertiary border border-border rounded-xl p-6 mb-6 text-left">
+                <div className="flex justify-between items-center mb-4">
+                   <span className="font-bold text-lg text-text-primary">Plano Pro</span>
+                   <span className="text-storm-green font-bold text-xl">R$ 49,90 <small className="text-xs text-text-secondary">/mês</small></span>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                   <div className="flex items-center gap-2 text-sm text-text-secondary">
+                      <Check className="w-4 h-4 text-storm-green" /> Clientes Ilimitados
+                   </div>
+                   <div className="flex items-center gap-2 text-sm text-text-secondary">
+                      <Check className="w-4 h-4 text-storm-green" /> Leads Ilimitados
+                   </div>
+                   <div className="flex items-center gap-2 text-sm text-text-secondary">
+                      <Check className="w-4 h-4 text-storm-green" /> Suporte VIP via WhatsApp
+                   </div>
+                </div>
+
+                <div className="border-t border-border pt-4">
+                   <p className="text-xs font-bold text-text-secondary uppercase mb-3">Pagamento via PIX</p>
+                   <div className="bg-bg-secondary p-3 rounded-lg border border-dashed border-storm-purple/50 flex items-center justify-between mb-4">
+                      <code className="text-storm-purple font-mono font-bold">19 98837 40258</code>
+                      <button 
+                        onClick={() => { navigator.clipboard.writeText('199883740258'); addToast('Chave PIX copiada!', 'success'); }}
+                        className="text-[10px] bg-storm-purple/10 text-storm-purple px-2 py-1 rounded hover:bg-storm-purple/20"
+                      >
+                        Copiar
+                      </button>
+                   </div>
+                   <p className="text-[10px] text-text-secondary leading-relaxed">
+                      * Após o pagamento, envie o comprovante para o WhatsApp acima para liberar sua licença imediatamente.
+                   </p>
+                </div>
+             </div>
+
+             <a 
+               href="https://wa.me/55199883740258?text=Olá! Acabei de fazer o pagamento do Storm CRM Pro. Segue o comprovante."
+               target="_blank"
+               rel="noreferrer"
+               className="w-full bg-storm-green text-white py-3 rounded-lg font-bold hover:bg-storm-green/90 flex items-center justify-center gap-2 shadow-lg shadow-storm-green/20"
+             >
+                <Phone className="w-5 h-5" />
+                Enviar Comprovante via WhatsApp
+             </a>
           </div>
       </Modal>
     </div>
