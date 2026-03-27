@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "Cliente": {
+      "title": "Cliente",
+      "description": "Dados de um cliente ativo ou inativo do sistema de IPTV.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "telefone": { "type": "string" },
+        "email": { "type": "string" },
+        "dataInicio": { "type": "string", "format": "date-time" },
+        "proximoVencimento": { "type": "string", "format": "date-time" },
+        "valorMensal": { "type": "number" },
+        "status": { "type": "string", "enum": ["Ativo", "Inativo", "Cancelado"] },
+        "origem": { "type": "string", "enum": ["Organico", "Ads", "Indicacao"] },
+        "dispositivo": { "type": "string" },
+        "observacoes": { "type": "string" },
+        "historicoPagamentos": { "type": "array", "items": { "type": "string", "format": "date-time" } },
+        "dataCriacao": { "type": "string", "format": "date-time" },
+        "uid": { "type": "string", "description": "ID do usuário dono deste registro" }
+      },
+      "required": ["id", "nome", "telefone", "dataInicio", "proximoVencimento", "valorMensal", "status", "origem", "uid"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Dados de um lead em fase de teste ou conversão.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "telefone": { "type": "string" },
+        "dataInicioTeste": { "type": "string", "format": "date-time" },
+        "dataFimTeste": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["Em Teste", "Convertido", "Nao Converteu", "Expirado"] },
+        "origem": { "type": "string", "enum": ["Organico", "Ads", "Indicacao"] },
+        "motivoNaoConversao": { "type": "string" },
+        "observacoes": { "type": "string" },
+        "uid": { "type": "string" }
+      },
+      "required": ["id", "nome", "telefone", "dataInicioTeste", "dataFimTeste", "status", "origem", "uid"]
+    },
+    "Investimento": {
+      "title": "Investimento",
+      "description": "Registro de gastos com anúncios.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "data": { "type": "string", "format": "date-time" },
+        "plataforma": { "type": "string", "enum": ["Facebook", "Google", "TikTok", "Influencer", "Outros"] },
+        "valor": { "type": "number" },
+        "observacoes": { "type": "string" },
+        "uid": { "type": "string" }
+      },
+      "required": ["id", "data", "plataforma", "valor", "uid"]
+    },
+    "TemplateMensagem": {
+      "title": "Template de Mensagem",
+      "description": "Modelos de mensagens pré-definidos.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "titulo": { "type": "string" },
+        "conteudo": { "type": "string" },
+        "categoria": { "type": "string", "enum": ["Boas-vindas", "Cobranca", "Suporte", "Vendas"] },
+        "uid": { "type": "string" }
+      },
+      "required": ["id", "titulo", "conteudo", "categoria", "uid"]
+    },
+    "Task": {
+      "title": "Tarefa",
+      "description": "Item de checklist do usuário.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "text": { "type": "string" },
+        "isCompleted": { "type": "boolean" },
+        "priority": { "type": "string", "enum": ["Alta", "Media", "Baixa"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "uid": { "type": "string" }
+      },
+      "required": ["id", "text", "isCompleted", "priority", "createdAt", "uid"]
+    },
+    "UserProfile": {
+      "title": "Perfil do Usuário",
+      "description": "Dados de perfil e assinatura do usuário.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "businessName": { "type": "string" },
+        "planId": { "type": "string", "enum": ["starter", "professional", "enterprise"] },
+        "subscriptionStatus": { "type": "string", "enum": ["trial", "active", "expired", "canceled", "suspended"] },
+        "trialEndsAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isAdmin": { "type": "boolean" }
+      },
+      "required": ["id", "email", "planId", "subscriptionStatus", "trialEndsAt"]
+    },
+    "Indicacao": {
+      "title": "Indicação",
+      "description": "Registro de indicação de novos clientes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clienteIndicadorId": { "type": "string" },
+        "clienteIndicadoId": { "type": "string" },
+        "dataIndicacao": { "type": "string", "format": "date-time" },
+        "statusRecompensa": { "type": "string", "enum": ["Pendente", "Entregue"] },
+        "uid": { "type": "string" }
+      },
+      "required": ["id", "clienteIndicadorId", "clienteIndicadoId", "dataIndicacao", "statusRecompensa", "uid"]
+    },
+    "Transaction": {
+      "title": "Transação",
+      "description": "Registro de pagamentos de assinaturas (Admin).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "planId": { "type": "string", "enum": ["starter", "professional", "enterprise"] },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["paid", "pending", "failed", "refunded"] },
+        "method": { "type": "string", "enum": ["pix", "credit_card"] }
+      },
+      "required": ["id", "userId", "userName", "planId", "amount", "date", "status", "method"]
+    }
+  },
+  "firestore": {
+    "/clientes/{clienteId}": {
+      "schema": "Cliente",
+      "description": "Coleção de clientes do usuário."
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Coleção de leads do usuário."
+    },
+    "/investimentos/{investimentoId}": {
+      "schema": "Investimento",
+      "description": "Coleção de investimentos em marketing."
+    },
+    "/templates/{templateId}": {
+      "schema": "TemplateMensagem",
+      "description": "Coleção de templates de mensagens."
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Coleção de tarefas pessoais."
+    },
+    "/indicacoes/{indicacaoId}": {
+      "schema": "Indicacao",
+      "description": "Coleção de indicações do usuário."
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Coleção de transações (acesso restrito a admins)."
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Dados de perfil do usuário (acesso restrito ao próprio usuário)."
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Storm CRM",
+  "description": "Sistema completo de gestão de clientes para IPTV/Streaming com IA.",
+  "requestFramePermissions": ["microphone"]
+}
